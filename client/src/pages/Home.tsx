@@ -209,7 +209,7 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f6f7f5] text-[#1e2b2a]">
+    <div className="min-h-screen bg-[#fbf8f5] text-[#3c2b29]">
       <header className="site-header">
         <div className="container nav-wrap">
           <a className="brand" href="#inicio" aria-label="Dra. Rainara Campos - início">

@@ -33,3 +33,7 @@ Each portfolio card links back to the corresponding Instagram post. The site doe
 ## Conversion system
 
 Primary conversion is WhatsApp via `https://wa.me/5531987704685`. Secondary conversion opens the Instagram profile. Article modals provide context, safety framing, and a procedure-specific WhatsApp message.
+
+## Revised color direction — nude tonal layering
+
+The visual system now uses a feminine, understated nude palette rather than green. The primary tones are warm ivory (`#fbf8f5`), soft blush beige (`#efe3dc`), dusty rose (`#b78373`), muted terracotta (`#8b6156`), and cocoa brown (`#4a302b`). These colors are layered by section so the site feels warm and editorial without sacrificing healthcare readability. Dark text remains cocoa for contrast, while dusty rose is reserved for actions, emphasis, and small moments of warmth.
