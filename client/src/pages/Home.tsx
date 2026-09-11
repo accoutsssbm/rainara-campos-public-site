@@ -1,309 +1,293 @@
-import { useMemo, useState } from "react";
-import {
-  ArrowUpRight,
-  CalendarDays,
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Clock3,
-  Instagram,
-  MapPin,
-  MessageCircle,
-  ShieldCheck,
-  Sparkles,
-  Stethoscope,
-} from "lucide-react";
-
-type Article = {
-  id: string;
-  category: string;
-  readTime: string;
-  title: string;
-  intro: string;
-  cover: string;
-  points: string[];
-  cta: string;
-};
+import { ArrowUpRight, Instagram, MapPin, MessageCircle, ShieldCheck } from "lucide-react";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/${name}`;
-
 const whatsappBase = "https://wa.me/5531987704685";
 const instagramUrl = "https://www.instagram.com/rainara_campos/";
 
-const portfolio = [
+const results = [
   {
     image: asset("pos-operatorio.jpg"),
-    label: "Pós-operatório",
-    title: "Acompanhamento em cada fase da recuperação",
-    caption: "Evolução do pós-cirúrgico publicada no Instagram.",
+    eyebrow: "Pós-operatório",
+    title: "Evolução acompanhada, etapa por etapa",
+    text: "Registro publicado no Instagram sobre acompanhamento pós-cirúrgico e evolução do tecido.",
     href: "https://www.instagram.com/p/DbE9O9rkeSF/",
-    tall: true,
-  },
-  {
-    image: asset("cuidado.jpg"),
-    label: "Cuidado próximo",
-    title: "Acolhimento que faz parte do resultado",
-    caption: "Registro de um atendimento com presença e escuta.",
-    href: "https://www.instagram.com/p/DbEtX31Eb_b/",
-    tall: false,
+    featured: true,
   },
   {
     image: asset("minilipo.jpg"),
-    label: "Mini lipo",
-    title: "Recuperação assistida com atenção aos detalhes",
-    caption: "Um dos trabalhos de recuperação compartilhados no perfil.",
+    eyebrow: "Pós de mini lipo",
+    title: "Recuperação assistida e individualizada",
+    text: "Registro real de recuperação compartilhado no perfil profissional.",
     href: "https://www.instagram.com/p/DbHaZZwx23B/",
-    tall: false,
   },
   {
     image: asset("harmonia.jpg"),
-    label: "Harmonia facial",
-    title: "Naturalidade na construção de um perfil harmônico",
-    caption: "Trabalho publicado no Instagram sobre harmonia facial.",
+    eyebrow: "Harmonia",
+    title: "Equilíbrio sem perder identidade",
+    text: "Resultado publicado com proposta de naturalidade e proporção.",
     href: "https://www.instagram.com/p/DbHcJVnx9is/",
-    tall: false,
   },
   {
     image: asset("labios.jpg"),
-    label: "Lábios",
-    title: "Delicadeza, hidratação e movimento natural",
-    caption: "Resultado apresentado no perfil @rainara_campos.",
+    eyebrow: "Lábios",
+    title: "Contorno, hidratação e movimento natural",
+    text: "Resultado apresentado no Instagram da profissional.",
     href: "https://www.instagram.com/p/DbHbRmYxU5B/",
-    tall: true,
+    featured: true,
+  },
+  {
+    image: asset("cuidado.jpg"),
+    eyebrow: "Cuidado próximo",
+    title: "Acolhimento também faz parte do processo",
+    text: "Um registro do atendimento e da relação de cuidado com cada paciente.",
+    href: "https://www.instagram.com/p/DbEtX31Eb_b/",
   },
 ];
 
-const articles: Article[] = [
+const procedures = [
   {
-    id: "pos-operatorio",
-    category: "Pós-operatório",
-    readTime: "6 min de leitura",
-    title: "Pós-operatório: por que o acompanhamento faz diferença",
-    intro: "O pós-operatório é uma fase de cuidado contínuo. Entenda como uma rotina acompanhada pode ajudar você a atravessar a recuperação com mais informação, segurança e tranquilidade.",
-    cover: asset("pos-operatorio.jpg"),
-    points: [
-      "Cada cirurgia tem uma recuperação própria: o plano deve respeitar a orientação do cirurgião e a resposta do seu corpo.",
-      "A avaliação profissional observa edema, sensibilidade, mobilidade e sinais que merecem encaminhamento.",
-      "Manobras e recursos só devem ser utilizados quando indicados e no momento adequado para cada etapa.",
-      "O cuidado também inclui orientações de rotina, comunicação clara e acompanhamento da evolução.",
-    ],
-    cta: "Quero conversar sobre meu pós-operatório",
+    n: "01",
+    title: "Pós-operatório",
+    text: "Acompanhamento individual após cirurgias, respeitando a liberação médica, a fase de recuperação e a resposta de cada corpo.",
   },
   {
-    id: "primeiras-72-horas",
-    category: "Pós-operatório",
-    readTime: "5 min de leitura",
-    title: "Primeiras 72 horas: como se organizar para o início do pós",
-    intro: "Planejamento e informação reduzem a ansiedade nos primeiros dias. Veja o que costuma entrar na conversa com a equipe e quais dúvidas levar para sua avaliação.",
-    cover: asset("cuidado.jpg"),
-    points: [
-      "Organize transporte, repouso e apoio para as tarefas que exigem esforço físico.",
-      "Siga medicações, curativos, uso de cinta e restrições exatamente como prescritos.",
-      "Tenha os contatos da equipe médica e informe qualquer alteração fora do esperado.",
-      "Não antecipe técnicas ou produtos sem liberação: o timing é parte do cuidado.",
-    ],
-    cta: "Agendar uma conversa inicial",
+    n: "02",
+    title: "Plasma no pós-operatório",
+    text: "Recurso que pode integrar alguns protocolos de recuperação quando houver indicação profissional e alinhamento com a equipe responsável pelo pós-cirúrgico.",
   },
   {
-    id: "edema-e-conforto",
-    category: "Pós-operatório",
-    readTime: "5 min de leitura",
-    title: "Edema, desconforto e rotina: o que observar na recuperação",
-    intro: "Inchaço e sensibilidade podem aparecer em diferentes momentos. O mais importante é entender o seu plano, observar a evolução e comunicar qualquer dúvida.",
-    cover: asset("minilipo.jpg"),
-    points: [
-      "A intensidade e a duração do edema variam conforme o procedimento e as características individuais.",
-      "Hidratação, repouso relativo e mobilidade autorizada devem seguir orientação da equipe responsável.",
-      "A avaliação presencial ajuda a diferenciar uma evolução esperada de algo que exige contato médico.",
-      "O objetivo do acompanhamento é cuidar do processo, sem prometer atalhos ou resultados iguais para todos.",
-    ],
-    cta: "Tirar dúvidas sobre a recuperação",
+    n: "03",
+    title: "Criolipólise",
+    text: "Avaliação da região, objetivos e contraindicações antes de qualquer indicação. O resultado é gradual e varia de pessoa para pessoa.",
   },
   {
-    id: "pos-mini-lipo",
-    category: "Pós-operatório",
-    readTime: "6 min de leitura",
-    title: "Pós de mini lipo: cuidado individualizado, sem fórmulas prontas",
-    intro: "A recuperação de uma mini lipo merece atenção ao corpo todo. Conheça os pontos que orientam uma avaliação e como o acompanhamento pode se adaptar à sua fase.",
-    cover: asset("minilipo.jpg"),
-    points: [
-      "O histórico cirúrgico e a liberação médica definem quando e como iniciar qualquer cuidado complementar.",
-      "A observação de assimetrias, tensão, sensibilidade e edema orienta a conduta de cada encontro.",
-      "Frequência e recursos não são iguais para todas as pessoas: o plano é reavaliado conforme a evolução.",
-      "Cuidar do pós também é respeitar limites, comunicar sintomas e manter o retorno com o cirurgião.",
-    ],
-    cta: "Falar sobre pós de mini lipo",
+    n: "04",
+    title: "Harmonização de glúteos",
+    text: "Planejamento corporal individualizado com foco em proporção, contorno e naturalidade, sempre após avaliação presencial.",
   },
   {
-    id: "pos-cirurgia-plastica",
-    category: "Pós-operatório",
-    readTime: "6 min de leitura",
-    title: "Pós-cirurgia plástica: o cuidado que acompanha cada etapa",
-    intro: "Do primeiro contato às reavaliações, o acompanhamento pós-cirúrgico deve ser acolhedor, atento e alinhado com a equipe médica.",
-    cover: asset("cuidado.jpg"),
-    points: [
-      "Uma conversa inicial alinha expectativas, histórico, procedimento realizado e orientações recebidas.",
-      "O acompanhamento observa mudanças ao longo do tempo, não apenas uma fotografia isolada.",
-      "A comunicação entre paciente, profissional e cirurgião é essencial para uma jornada mais segura.",
-      "Procure atendimento médico diante de sinais intensos, inesperados ou que causem preocupação.",
-    ],
-    cta: "Conhecer o acompanhamento",
-  },
-  {
-    id: "criolipolise",
-    category: "Criolipólise",
-    readTime: "5 min de leitura",
-    title: "Criolipólise: quando a avaliação vem antes do procedimento",
-    intro: "A criolipólise não é uma solução universal. Uma avaliação cuidadosa ajuda a entender indicação, objetivos, limitações e o que faz sentido para cada corpo.",
-    cover: asset("harmonia.jpg"),
-    points: [
-      "A conversa considera região, histórico, expectativas e condições que podem contraindicar o procedimento.",
-      "O resultado não é imediato e pode variar; a avaliação deve ser honesta e sem promessas garantidas.",
-      "A escolha de parâmetros e a orientação após a sessão fazem parte do atendimento responsável.",
-      "Uma consulta é o melhor caminho para saber se a técnica é adequada ao seu caso.",
-    ],
-    cta: "Quero avaliar criolipólise",
-  },
-  {
-    id: "harmonia-facial",
-    category: "Procedimentos",
-    readTime: "4 min de leitura",
-    title: "Harmonia facial: naturalidade começa na escuta",
-    intro: "O trabalho publicado no Instagram mostra uma busca por equilíbrio, suavidade e respeito à individualidade — sem transformar o rosto em uma fórmula.",
-    cover: asset("harmonia.jpg"),
-    points: [
-      "A avaliação considera proporções, movimento, queixas e o que a pessoa deseja preservar.",
-      "O planejamento deve ser individual, com explicação clara sobre possibilidades e limites.",
-      "Naturalidade é uma construção conjunta entre técnica, indicação e expectativa realista.",
-      "O primeiro passo é conversar, não decidir por uma foto de referência.",
-    ],
-    cta: "Agendar avaliação individual",
-  },
-  {
-    id: "cuidado-com-os-labios",
-    category: "Procedimentos",
-    readTime: "4 min de leitura",
-    title: "Lábios delicados: cuidado com hidratação, contorno e movimento",
-    intro: "Um resultado suave depende de planejamento. A proposta é entender o que você busca e respeitar a anatomia, o toque e a expressão.",
-    cover: asset("labios.jpg"),
-    points: [
-      "A consulta define objetivo, quantidade, proporção e o que é possível para cada caso.",
-      "O cuidado após o procedimento e os sinais que exigem contato devem ser explicados antes da sessão.",
-      "Fotos de referência ajudam na conversa, mas não garantem que o mesmo resultado seja indicado para você.",
-      "A escolha responsável começa com informação, consentimento e expectativa alinhada.",
-    ],
-    cta: "Conversar sobre lábios naturais",
+    n: "05",
+    title: "Botox",
+    text: "Planejamento personalizado para suavização de linhas de expressão, preservando movimento, identidade e naturalidade.",
   },
 ];
 
-function buildWhatsAppLink(message: string) {
+const articles = [
+  {
+    tag: "Pós-operatório",
+    title: "O pós não começa quando o procedimento termina",
+    text: "A recuperação é uma sequência de fases. Edema, sensibilidade e mobilidade mudam ao longo dos dias, por isso a conduta precisa acompanhar a evolução — e nunca substituir as orientações do cirurgião.",
+  },
+  {
+    tag: "Plasma",
+    title: "Plasma em pós-operatório: onde ele entra no cuidado",
+    text: "Recursos baseados em plasma podem ser considerados em situações específicas, mas não são um protocolo automático para todo pós-operatório. A indicação depende da fase de cicatrização, integridade da pele, objetivo terapêutico e liberação da equipe responsável.",
+  },
+  {
+    tag: "Criolipólise",
+    title: "Criolipólise: indicação é mais importante do que tendência",
+    text: "Antes da sessão é necessário avaliar tecido, região, histórico e expectativa. O tratamento não substitui emagrecimento e não produz o mesmo resultado em todos os corpos. Uma boa indicação começa por uma conversa honesta.",
+  },
+  {
+    tag: "Harmonização de glúteos",
+    title: "Contorno corporal deve respeitar anatomia e proporção",
+    text: "Harmonização não significa padronização. O planejamento deve considerar estrutura corporal, assimetrias, objetivo estético e limites técnicos para construir uma proposta compatível com o biotipo da paciente.",
+  },
+  {
+    tag: "Botox",
+    title: "Botox natural começa com movimento, não com exagero",
+    text: "A avaliação considera dinâmica muscular, linhas de expressão e áreas de maior contração. A proposta deve ser individualizada, com explicação clara sobre início de efeito, duração esperada e necessidade de reavaliação.",
+  },
+];
+
+function whatsapp(message: string) {
   return `${whatsappBase}?text=${encodeURIComponent(message)}`;
 }
 
-export default function Home() {
-  const [activeArticle, setActiveArticle] = useState<Article | null>(null);
-  const [showAllArticles, setShowAllArticles] = useState(false);
-  const visibleArticles = useMemo(
-    () => (showAllArticles ? articles : articles.slice(0, 5)),
-    [showAllArticles],
-  );
+const styles = `
+  :root{--ink:#2e2a27;--muted:#6f665f;--paper:#f4f1ed;--sand:#e7dfd7;--stone:#d7ccc2;--line:#c9bdb2;--cream:#fbf9f6;--deep:#403a35}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink)}
+  .rc-shell{min-height:100vh;background:var(--paper);font-family:"DM Sans",sans-serif}
+  .rc-container{width:min(1180px,calc(100% - 40px));margin:0 auto}
+  .rc-header{position:sticky;top:0;z-index:40;background:rgba(244,241,237,.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(64,58,53,.09)}
+  .rc-nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+  .rc-brand{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none}
+  .rc-brand img{width:42px;height:42px;border-radius:50%;object-fit:cover;filter:saturate(.78)}
+  .rc-brand strong{display:block;font-family:"DM Serif Display",serif;font-size:22px;font-weight:400;line-height:1}
+  .rc-brand small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.16em;margin-top:5px}
+  .rc-links{display:flex;align-items:center;gap:28px}.rc-links a{font-size:13px;color:var(--muted);text-decoration:none}.rc-links a:hover{color:var(--ink)}
+  .rc-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;padding:13px 19px;text-decoration:none;font-size:13px;font-weight:600;transition:.2s ease}
+  .rc-btn-primary{background:var(--deep);color:#fff}.rc-btn-primary:hover{transform:translateY(-1px);background:#26221f}
+  .rc-btn-ghost{border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.25)}
+  .rc-hero{padding:72px 0 84px}.rc-hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:72px;align-items:center}
+  .rc-kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7a6e65;font-weight:700;margin-bottom:18px}
+  .rc-hero h1,.rc-section-title{font-family:"DM Serif Display",serif;font-weight:400;letter-spacing:-.03em}
+  .rc-hero h1{font-size:clamp(50px,6.2vw,86px);line-height:.95;margin:0;max-width:720px}.rc-hero h1 em{font-weight:400;color:#8e7d70}
+  .rc-lede{font-size:17px;line-height:1.75;color:var(--muted);max-width:590px;margin:28px 0 30px}
+  .rc-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+  .rc-proof{display:flex;flex-wrap:wrap;gap:22px;color:var(--muted);font-size:12px}.rc-proof span{display:flex;align-items:center;gap:7px}
+  .rc-visual{position:relative;min-height:600px}.rc-visual-main{position:absolute;right:0;top:0;width:76%;height:78%;border-radius:4px;overflow:hidden}.rc-visual-main img{width:100%;height:100%;object-fit:cover;filter:saturate(.72) contrast(.96)}
+  .rc-visual-small{position:absolute;left:0;bottom:0;width:46%;height:47%;border:10px solid var(--paper);overflow:hidden}.rc-visual-small img{width:100%;height:100%;object-fit:cover;filter:saturate(.72)}
+  .rc-caption{position:absolute;right:18px;bottom:66px;background:rgba(251,249,246,.94);padding:15px 17px;width:210px;font-size:11px;line-height:1.5;color:var(--muted);border:1px solid rgba(64,58,53,.09)}
+  .rc-band{background:var(--deep);color:#f5f1ed;padding:18px 0}.rc-band-inner{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;font-size:11px;letter-spacing:.12em;text-transform:uppercase}.rc-band i{font-style:normal;opacity:.35}
+  .rc-section{padding:96px 0}.rc-section-soft{background:#ebe5df}.rc-heading{display:grid;grid-template-columns:1fr .72fr;gap:60px;align-items:end;margin-bottom:42px}
+  .rc-section-title{font-size:clamp(42px,5vw,68px);line-height:.98;margin:0}.rc-heading p{margin:0;color:var(--muted);line-height:1.75;font-size:14px}
+  .rc-results{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.rc-result{grid-column:span 4;text-decoration:none;color:inherit;background:var(--cream);border:1px solid rgba(64,58,53,.08);overflow:hidden}.rc-result.featured{grid-column:span 6}
+  .rc-result img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;filter:saturate(.8);transition:.35s}.rc-result:hover img{transform:scale(1.015);filter:saturate(.95)}
+  .rc-result-copy{padding:20px}.rc-result-copy span,.rc-card-num,.rc-article-tag{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#8a786a;font-weight:700}.rc-result-copy h3{font-family:"DM Serif Display",serif;font-weight:400;font-size:27px;line-height:1.05;margin:9px 0 10px}.rc-result-copy p{font-size:12px;line-height:1.65;color:var(--muted);margin:0}.rc-result-link{display:inline-flex;align-items:center;gap:6px;margin-top:15px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .rc-note{margin-top:18px;color:#7b7068;font-size:11px;line-height:1.6}
+  .rc-procedures{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}.rc-procedure{min-height:285px;padding:24px 22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column}.rc-card-num{margin-bottom:auto}.rc-procedure h3{font-family:"DM Serif Display",serif;font-size:28px;font-weight:400;line-height:1.03;margin:28px 0 13px}.rc-procedure p{font-size:12px;line-height:1.72;color:var(--muted);margin:0}
+  .rc-articles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.rc-article{background:var(--cream);padding:30px;border:1px solid rgba(64,58,53,.08)}.rc-article:last-child{grid-column:1/-1;display:grid;grid-template-columns:.42fr 1fr;gap:48px;align-items:center}.rc-article h3{font-family:"DM Serif Display",serif;font-weight:400;font-size:31px;line-height:1.06;margin:10px 0 14px}.rc-article p{font-size:13px;line-height:1.75;color:var(--muted);margin:0}.rc-article a{display:inline-flex;align-items:center;gap:7px;margin-top:20px;color:var(--ink);text-decoration:none;font-size:12px;font-weight:700}
+  .rc-about{display:grid;grid-template-columns:.8fr 1.2fr;gap:68px;align-items:center}.rc-about-photo{aspect-ratio:4/5;background:var(--sand);overflow:hidden}.rc-about-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.16) saturate(.72)}.rc-about-copy h2{font-family:"DM Serif Display",serif;font-size:clamp(40px,5vw,64px);font-weight:400;line-height:1;margin:0 0 24px}.rc-about-copy p{color:var(--muted);font-size:15px;line-height:1.8;margin:0 0 16px}
+  .rc-cta{padding:84px 0;background:#dcd2c9}.rc-cta-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}.rc-cta h2{font-family:"DM Serif Display",serif;font-size:clamp(42px,5vw,68px);font-weight:400;line-height:.98;margin:0}.rc-cta p{max-width:650px;color:var(--muted);font-size:14px;line-height:1.7;margin:18px 0 0}
+  .rc-footer{padding:36px 0 45px;background:var(--deep);color:#e8e1da}.rc-footer-inner{display:flex;justify-content:space-between;gap:24px;align-items:flex-end}.rc-footer p{font-size:11px;color:#bfb5ac;line-height:1.7;margin:8px 0 0}.rc-footer a{color:#e8e1da;text-decoration:none}.rc-social{display:flex;gap:12px}.rc-social a{width:42px;height:42px;border:1px solid rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center}
+  @media(max-width:980px){.rc-links{display:none}.rc-hero-grid,.rc-heading,.rc-about{grid-template-columns:1fr}.rc-hero{padding-top:48px}.rc-visual{min-height:520px}.rc-heading{gap:20px}.rc-results{grid-template-columns:1fr 1fr}.rc-result,.rc-result.featured{grid-column:auto}.rc-procedures{grid-template-columns:repeat(2,1fr)}.rc-article:last-child{display:block}.rc-cta-inner{grid-template-columns:1fr}}
+  @media(max-width:640px){.rc-container{width:min(100% - 28px,1180px)}.rc-nav{height:68px}.rc-nav>.rc-btn{padding:11px 14px}.rc-nav>.rc-btn span{display:none}.rc-hero{padding:42px 0 62px}.rc-hero-grid{gap:36px}.rc-visual{min-height:430px}.rc-visual-main{width:84%;height:78%}.rc-visual-small{width:48%;height:44%;border-width:6px}.rc-caption{right:8px;bottom:34px;width:180px}.rc-section{padding:72px 0}.rc-results,.rc-articles{grid-template-columns:1fr}.rc-result,.rc-result.featured{grid-column:auto}.rc-procedures{grid-template-columns:1fr}.rc-procedure{min-height:220px}.rc-about{gap:36px}.rc-cta{padding:64px 0}.rc-footer-inner{align-items:flex-start;flex-direction:column}.rc-band-inner{justify-content:flex-start;gap:12px 18px}}
+`;
 
+export default function Home() {
   return (
-    <div className="min-h-screen bg-[#fbf8f5] text-[#3c2b29]">
-      <header className="site-header">
-        <div className="container nav-wrap">
-          <a className="brand" href="#inicio" aria-label="Dra. Rainara Campos - início">
-            <img src={asset("profile.jpg")} alt="Dra. Rainara Campos" />
-            <span><strong>Rainara</strong><small>cuidado que acompanha</small></span>
+    <div className="rc-shell">
+      <style>{styles}</style>
+
+      <header className="rc-header">
+        <div className="rc-container rc-nav">
+          <a className="rc-brand" href="#inicio" aria-label="Rainara Campos - início">
+            <img src={asset("profile.jpg")} alt="Rainara Campos" />
+            <span><strong>Rainara Campos</strong><small>Estética · cuidado · resultado</small></span>
           </a>
-          <nav className="desktop-nav" aria-label="Navegação principal">
-            <a href="#trabalho">Meu trabalho</a>
-            <a href="#especialidades">Especialidades</a>
-            <a href="#artigos">Conteúdos</a>
-            <a href="#contato">Contato</a>
+          <nav className="rc-links" aria-label="Navegação principal">
+            <a href="#resultados">Resultados</a>
+            <a href="#procedimentos">Procedimentos</a>
+            <a href="#conteudos">Conteúdos</a>
+            <a href="#sobre">Sobre</a>
           </nav>
-          <a className="button button-small button-primary" href={buildWhatsAppLink("Olá, Rainara! Gostaria de agendar uma avaliação.")} target="_blank" rel="noreferrer">
-            <MessageCircle size={16} /> Falar comigo
+          <a className="rc-btn rc-btn-primary" href={whatsapp("Olá, Rainara! Gostaria de agendar uma avaliação.")} target="_blank" rel="noreferrer">
+            <MessageCircle size={16} /><span>Agendar avaliação</span>
           </a>
         </div>
       </header>
 
       <main id="inicio">
-        <section className="hero-section">
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <div className="eyebrow"><span className="eyebrow-dot" /> Parauapebas · PA</div>
-              <h1>Seu cuidado merece <em>presença</em> em cada etapa.</h1>
-              <p className="hero-lede">Pós-operatório, criolipólise e procedimentos pensados para acolher sua história — com avaliação individual, informação clara e acompanhamento próximo.</p>
-              <div className="hero-actions">
-                <a className="button button-primary" href={buildWhatsAppLink("Olá, Rainara! Quero entender qual cuidado é mais indicado para mim.")} target="_blank" rel="noreferrer"><MessageCircle size={18} /> Quero conversar</a>
-                <a className="text-link" href="#trabalho">Ver trabalhos <ArrowUpRight size={17} /></a>
+        <section className="rc-hero">
+          <div className="rc-container rc-hero-grid">
+            <div>
+              <div className="rc-kicker">Estética avançada · Parauapebas, PA</div>
+              <h1>Resultado que se vê.<br /><em>Cuidado que se sente.</em></h1>
+              <p className="rc-lede">Um espaço digital para conhecer trabalhos reais, entender os procedimentos e chegar à avaliação com mais informação. Pós-operatório, criolipólise, harmonização corporal e facial com um olhar individual para cada paciente.</p>
+              <div className="rc-actions">
+                <a className="rc-btn rc-btn-primary" href={whatsapp("Olá, Rainara! Vi seus resultados e quero saber qual procedimento é indicado para mim.")} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Quero conversar</a>
+                <a className="rc-btn rc-btn-ghost" href="#resultados">Ver resultados <ArrowUpRight size={16} /></a>
               </div>
-              <div className="trust-row">
-                <div className="trust-item"><ShieldCheck size={18} /><span>Atendimento individualizado</span></div>
-                <div className="trust-item"><MapPin size={18} /><span>Cidade Jardim · Parauapebas</span></div>
+              <div className="rc-proof">
+                <span><ShieldCheck size={16} /> Avaliação individualizada</span>
+                <span><MapPin size={16} /> Cidade Jardim · Parauapebas</span>
               </div>
             </div>
-            <div className="hero-visual">
-              <div className="hero-photo-main"><img src={asset("pos-operatorio.jpg")} alt="Registro de trabalho em pós-operatório" /></div>
-              <div className="hero-photo-small"><img src={asset("cuidado.jpg")} alt="Atendimento acolhedor" /></div>
-              <div className="hero-note"><Sparkles size={16} /><span>cuidar é<br /><strong>escutar também</strong></span></div>
-              <div className="hero-stamp">feito com<br /><strong>presença</strong></div>
+            <div className="rc-visual" aria-label="Registros de resultados publicados no Instagram">
+              <div className="rc-visual-main"><img src={asset("pos-operatorio.jpg")} alt="Resultado de acompanhamento pós-operatório publicado no Instagram" /></div>
+              <div className="rc-visual-small"><img src={asset("labios.jpg")} alt="Resultado estético publicado no Instagram" /></div>
+              <div className="rc-caption">Registros reais publicados no perfil profissional. Resultados individuais podem variar.</div>
             </div>
           </div>
         </section>
 
-        <section className="intro-strip">
-          <div className="container intro-grid">
-            <p className="section-kicker">O que você encontra aqui</p>
-            <p className="intro-text">Um olhar atento para o seu momento. Do planejamento à recuperação, cada atendimento começa com escuta e termina com orientação para você seguir mais segura.</p>
-            <a className="circle-arrow" href="#contato" aria-label="Ir para contato"><ArrowUpRight size={21} /></a>
-          </div>
-        </section>
+        <div className="rc-band">
+          <div className="rc-container rc-band-inner"><span>Pós-operatório</span><i>•</i><span>Plasma</span><i>•</i><span>Criolipólise</span><i>•</i><span>Harmonização de glúteos</span><i>•</i><span>Botox</span></div>
+        </div>
 
-        <section id="trabalho" className="portfolio-section section-padding">
-          <div className="container">
-            <div className="section-heading split-heading"><div><p className="section-kicker">Do Instagram para perto de você</p><h2>Trabalhos que contam<br /><em>histórias reais.</em></h2></div><p>Uma seleção de registros publicados no <a href={instagramUrl} target="_blank" rel="noreferrer">@rainara_campos</a>. Veja o cuidado, conheça o processo e converse sobre o seu caso.</p></div>
-            <div className="portfolio-grid">
-              {portfolio.map((item) => <a className={`portfolio-card ${item.tall ? "portfolio-tall" : ""}`} key={item.title} href={item.href} target="_blank" rel="noreferrer"><img src={item.image} alt={item.title} /><div className="portfolio-overlay"><span>{item.label}</span><h3>{item.title}</h3><p>{item.caption}</p><ArrowUpRight size={19} /></div></a>)}
+        <section className="rc-section" id="resultados">
+          <div className="rc-container">
+            <div className="rc-heading">
+              <div><div className="rc-kicker">Antes, depois e evolução</div><h2 className="rc-section-title">Resultados que<br />contam uma história.</h2></div>
+              <p>Seleção de registros já publicados no Instagram de <strong>@rainara_campos</strong>. Clique em cada trabalho para abrir a publicação original e ver o contexto do atendimento.</p>
             </div>
-            <div className="center-link"><a className="text-link" href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={17} /> Ver mais no Instagram <ArrowUpRight size={16} /></a></div>
+            <div className="rc-results">
+              {results.map((item) => (
+                <a key={item.title} href={item.href} target="_blank" rel="noreferrer" className={`rc-result ${item.featured ? "featured" : ""}`}>
+                  <img src={item.image} alt={`${item.eyebrow}: ${item.title}`} />
+                  <div className="rc-result-copy">
+                    <span>{item.eyebrow}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                    <div className="rc-result-link">Ver no Instagram <ArrowUpRight size={14} /></div>
+                  </div>
+                </a>
+              ))}
+            </div>
+            <p className="rc-note">Imagens de resultados devem ser interpretadas como registros individuais. Não representam promessa de resultado e a indicação depende de avaliação profissional.</p>
           </div>
         </section>
 
-        <section id="especialidades" className="specialties-section section-padding">
-          <div className="container">
-            <div className="section-heading"><p className="section-kicker">Como posso cuidar de você</p><h2>Especialidades com<br /><em>olhar individual.</em></h2></div>
-            <div className="specialties-grid">
-              <article className="specialty-card specialty-featured"><div className="specialty-index">01</div><div className="specialty-icon"><Stethoscope size={22} /></div><h3>Pós-operatório</h3><p>Acompanhamento atento para diferentes momentos da recuperação, sempre respeitando a orientação do seu cirurgião e o tempo do seu corpo.</p><a className="text-link" href="#artigos">Conhecer os cuidados <ArrowUpRight size={16} /></a></article>
-              <article className="specialty-card"><div className="specialty-index">02</div><div className="specialty-icon"><Sparkles size={22} /></div><h3>Criolipólise</h3><p>Avaliação individual para entender indicação, objetivos e limites do procedimento — sem promessas prontas.</p><a className="text-link" href="#artigos">Ler sobre o procedimento <ArrowUpRight size={16} /></a></article>
-              <article className="specialty-card"><div className="specialty-index">03</div><div className="specialty-icon"><Check size={22} /></div><h3>Procedimentos com naturalidade</h3><p>Harmonia facial e cuidados delicados que começam pela escuta e pelo respeito à sua individualidade.</p><a className="text-link" href="#artigos">Ver conteúdos <ArrowUpRight size={16} /></a></article>
+        <section className="rc-section rc-section-soft" id="procedimentos">
+          <div className="rc-container">
+            <div className="rc-heading">
+              <div><div className="rc-kicker">Procedimentos</div><h2 className="rc-section-title">Menos promessa.<br />Mais avaliação.</h2></div>
+              <p>O objetivo é indicar o que realmente faz sentido para cada pessoa, respeitando histórico, anatomia, fase de recuperação e expectativas possíveis.</p>
+            </div>
+            <div className="rc-procedures">
+              {procedures.map((p) => <article className="rc-procedure" key={p.title}><div className="rc-card-num">{p.n}</div><h3>{p.title}</h3><p>{p.text}</p></article>)}
             </div>
           </div>
         </section>
 
-        <section id="artigos" className="articles-section section-padding">
-          <div className="container">
-            <div className="section-heading split-heading"><div><p className="section-kicker">Conteúdo para decidir com calma</p><h2>Informação que<br /><em>acolhe.</em></h2></div><p>Artigos feitos para responder dúvidas reais sobre procedimentos e pós-operatório — e ajudar você a dar o próximo passo com mais segurança.</p></div>
-            <div className="articles-grid">
-              {visibleArticles.map((article) => <button className="article-card" key={article.id} onClick={() => setActiveArticle(article)}><img src={article.cover} alt="" /><div className="article-body"><div className="article-meta"><span>{article.category}</span><span><Clock3 size={14} /> {article.readTime}</span></div><h3>{article.title}</h3><p>{article.intro}</p><span className="read-more">Ler artigo <ArrowUpRight size={16} /></span></div></button>)}
+        <section className="rc-section" id="conteudos">
+          <div className="rc-container">
+            <div className="rc-heading">
+              <div><div className="rc-kicker">Conteúdo para pacientes</div><h2 className="rc-section-title">Entenda antes<br />de decidir.</h2></div>
+              <p>Textos curtos para ajudar você a chegar à consulta sabendo o que perguntar. Informação não substitui avaliação, mas melhora a conversa e alinha expectativas.</p>
             </div>
-            <div className="center-link"><button className="text-link" onClick={() => setShowAllArticles(!showAllArticles)}>{showAllArticles ? "Mostrar menos" : "Ver todos os artigos"} {showAllArticles ? <ChevronUp size={17} /> : <ChevronDown size={17} />}</button></div>
+            <div className="rc-articles">
+              {articles.map((a) => (
+                <article className="rc-article" key={a.title}>
+                  <div>
+                    <div className="rc-article-tag">{a.tag}</div>
+                    <h3>{a.title}</h3>
+                  </div>
+                  <div>
+                    <p>{a.text}</p>
+                    <a href={whatsapp(`Olá, Rainara! Li o conteúdo sobre ${a.tag} e gostaria de tirar algumas dúvidas.`)} target="_blank" rel="noreferrer">Conversar sobre este tema <ArrowUpRight size={14} /></a>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="process-section section-padding">
-          <div className="container process-grid"><div><p className="section-kicker">Como funciona</p><h2>Um caminho mais<br /><em>tranquilo.</em></h2><p className="process-lede">Você não precisa chegar com todas as respostas. A primeira conversa serve para entender sua fase, suas dúvidas e o cuidado que faz sentido para você.</p><a className="button button-primary" href={buildWhatsAppLink("Olá, Rainara! Quero começar meu cuidado e agendar uma avaliação.")} target="_blank" rel="noreferrer"><CalendarDays size={18} /> Agendar avaliação</a></div><div className="steps-list"><div className="step"><span>01</span><div><h3>Conversa inicial</h3><p>Você conta seu momento, procedimento e objetivos.</p></div></div><div className="step"><span>02</span><div><h3>Avaliação individual</h3><p>Observamos o que é indicado e alinhamos expectativas.</p></div></div><div className="step"><span>03</span><div><h3>Acompanhamento</h3><p>Você recebe cuidado próximo e orientações para cada etapa.</p></div></div></div></div>
+        <section className="rc-section rc-section-soft" id="sobre">
+          <div className="rc-container rc-about">
+            <div className="rc-about-photo"><img src={asset("cuidado.jpg")} alt="Atendimento de Rainara Campos" /></div>
+            <div className="rc-about-copy">
+              <div className="rc-kicker">Rainara Campos</div>
+              <h2>Estética com presença, técnica e acompanhamento.</h2>
+              <p>O perfil profissional mostra um trabalho muito ligado a pós-operatório, recuperação e resultados estéticos naturais. A proposta deste site é ampliar isso: dar contexto aos resultados e transformar o Instagram em uma porta de entrada para um atendimento mais organizado.</p>
+              <p>A avaliação é o momento de entender objetivos, histórico, possíveis contraindicações e qual caminho faz sentido para cada paciente — sem fórmulas prontas.</p>
+              <div className="rc-actions" style={{ marginTop: 26, marginBottom: 0 }}>
+                <a className="rc-btn rc-btn-primary" href={whatsapp("Olá, Rainara! Quero agendar uma avaliação.")} target="_blank" rel="noreferrer"><MessageCircle size={16} /> Agendar</a>
+                <a className="rc-btn rc-btn-ghost" href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a>
+              </div>
+            </div>
+          </div>
         </section>
 
-        <section id="contato" className="contact-section"><div className="container contact-card"><div><p className="section-kicker">Vamos conversar?</p><h2>Seu próximo passo pode começar<br /><em>com uma mensagem.</em></h2><p>Conte um pouco sobre o que você procura. Será um prazer entender seu momento e orientar o melhor caminho.</p></div><div className="contact-actions"><a className="button button-light" href={buildWhatsAppLink("Olá, Rainara! Vim pelo site e gostaria de agendar uma avaliação.")} target="_blank" rel="noreferrer"><MessageCircle size={19} /> Chamar no WhatsApp</a><a className="contact-instagram" href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={18} /> @rainara_campos</a></div></div></section>
+        <section className="rc-cta" id="contato">
+          <div className="rc-container rc-cta-inner">
+            <div><div className="rc-kicker">Seu próximo passo</div><h2>Comece pela avaliação.</h2><p>Conte o que você deseja melhorar, em que fase está e quais procedimentos já realizou. A partir daí, Rainara pode orientar o melhor caminho para conversar sobre seu caso.</p></div>
+            <a className="rc-btn rc-btn-primary" href={whatsapp("Olá, Rainara! Vim pelo site e gostaria de marcar uma avaliação.")} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Falar no WhatsApp</a>
+          </div>
+        </section>
       </main>
 
-      <footer className="site-footer"><div className="container footer-grid"><div><div className="footer-brand">Rainara <span>cuidado que acompanha</span></div><p>Atendimento com presença em Cidade Jardim, Parauapebas — PA.</p></div><div className="footer-links"><a href="#trabalho">Trabalhos</a><a href="#especialidades">Especialidades</a><a href="#artigos">Artigos</a><a href={buildWhatsAppLink("Olá, Rainara!")} target="_blank" rel="noreferrer">WhatsApp</a></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} Dra. Rainara Campos</span><span>Conteúdo educativo. Cada caso deve ser avaliado individualmente.</span></div></footer>
-
-      <a className="floating-whatsapp" href={buildWhatsAppLink("Olá, Rainara! Vim pelo site e gostaria de conversar.")} target="_blank" rel="noreferrer" aria-label="Falar com Rainara pelo WhatsApp"><MessageCircle size={21} /></a>
-
-      {activeArticle && <div className="modal-backdrop" role="presentation" onClick={() => setActiveArticle(null)}><article className="article-modal" role="dialog" aria-modal="true" aria-labelledby="article-title" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setActiveArticle(null)} aria-label="Fechar artigo">×</button><img src={activeArticle.cover} alt="" /><div className="modal-content"><div className="article-meta"><span>{activeArticle.category}</span><span><Clock3 size={14} /> {activeArticle.readTime}</span></div><h2 id="article-title">{activeArticle.title}</h2><p className="modal-intro">{activeArticle.intro}</p><div className="article-points">{activeArticle.points.map((point) => <div key={point}><Check size={17} /><p>{point}</p></div>)}</div><div className="medical-note"><ShieldCheck size={18} /><p>Este conteúdo é educativo e não substitui avaliação médica, prescrição ou as orientações da equipe responsável pelo seu procedimento.</p></div><a className="button button-primary" href={buildWhatsAppLink(activeArticle.cta)} target="_blank" rel="noreferrer"><MessageCircle size={18} /> {activeArticle.cta}</a></div></article></div>}
+      <footer className="rc-footer">
+        <div className="rc-container rc-footer-inner">
+          <div><div style={{ fontFamily: '"DM Serif Display",serif', fontSize: 25 }}>Rainara Campos</div><p>Estética avançada · Cidade Jardim · Parauapebas, PA<br />Conteúdo informativo. A indicação de procedimentos depende de avaliação individual.</p></div>
+          <div className="rc-social">
+            <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={18} /></a>
+            <a href={whatsapp("Olá, Rainara! Vim pelo site.")} target="_blank" rel="noreferrer" aria-label="WhatsApp"><MessageCircle size={18} /></a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
